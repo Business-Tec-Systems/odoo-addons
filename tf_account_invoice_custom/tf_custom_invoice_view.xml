@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="ft_account_view" inherit_id="account.report_invoice_document">
+
+            <xpath expr="//div[@class='page']" position="replace">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-6">
+                        </div>
+                        <div class="col-xs-6" >
+                            <div style="font-size: 22px;font-weight: bold;">
+                                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                                <span t-if="o.type == 'out_refund'">Refund</span>
+                                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
+                                <span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+                                <span t-field="o.number"/>
+                            </div>
+                            <div style="font-size: 19px;font-weight: bold;">
+                                <span>Date: </span>
+                                <span t-field="o.date_invoice" t-field-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="row">
+
+                        <div class="col-xs-7">
+                            <strong>Customer:</strong>
+                            <br/>
+                            <strong t-field="o.partner_id.name"/>
+                            <br/>
+                            <!--     <div t-if="o.partner_id.cedula">
+     <span>Document ID: </span><span t-field="o.partner_id.cedula"/>
+     <br/>
+ </div>
+ <br/>-->
+                            <div t-if="o.partner_id.street">
+                                <span t-field="o.partner_id.street"/>
+                                <br/>
+                            </div>
+                            <div t-if="o.partner_id.street2">
+                                <span t-field="o.partner_id.street2"/>
+                                <br/>
+                            </div>
+                            <div t-if="o.partner_id.city">
+                                <span t-field="o.partner_id.city"/>
+
+                                <span style="margin-left: 25px; " t-field="o.partner_id.state_id"/>
+
+                            </div>
+
+                        </div>
+                        <div class="col-xs-5">
+                            <br/>
+                            <div t-if="o.user_id">
+                                <div class="col-xs-6">
+                                    <strong>Salesman:</strong>
+                                </div>
+                                <span t-field="o.user_id"/>
+                            </div>
+                            <div t-if="o.payment_term">
+                                <div class="col-xs-6">
+                                    <strong>Payment Terms: </strong>
+                                </div>
+                                <span t-field="o.payment_term"/>
+                            </div>
+                            <div t-if="o.origin">
+                                <div class="col-xs-6">
+                                    <strong>Source:</strong>
+                                </div>
+                                <span t-field="o.origin"/>
+                            </div>
+                            <div t-if="o.name">
+                                <div class="col-xs-6">
+                                    <strong>Reference:</strong>
+                                </div>
+                                <span t-field="o.name"/>
+                            </div>
+                            <div t-if="o.date_due">
+                                <div class="col-xs-6">
+                                    <strong>Date Due:</strong>
+                                </div>
+                                <span t-field="o.date_due" t-field-options="{&quot;format&quot;: &quot;dd/MM/yyyy&quot;}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br/>
+                    <br/>
+                    <table class="table table-condensed" style=" border: 2px solid; border-radius: 25px;">
+                        <thead>
+                            <tr  style="background-color:#E6E6E6;" >
+
+                                <th class="text-center">Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th class="text-center">Precio Unitario </th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <tr t-foreach="o.invoice_line" t-as="l">
+                                <td><span t-field="l.product_id.product_tmpl_id.default_code"/></td>
+                                <td>
+                                    <span t-field="l.product_id.name"/>
+                                    <br/>
+                                    <span t-field="l.product_id.attribute_value_ids[0].name"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.quantity"/>
+
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.price_unit"/>
+                                </td>
+
+                                <td class="text-right">
+                                    <span t-field="l.price_subtotal"
+                                          t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed" style="background-color:#E6E6E6;" >
+                                <tr class="border-black">
+                                    <td>
+                                        <strong>Subtotal</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount_untaxed" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>I.V.  13%</td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount_tax" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td>
+                                        <strong>Total A Pagar</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <span t-field="o.comment"/>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="row">
+
+                        <div class="col-xs-12 col-md-12">
+                            <h6>
+                                <br/>
+                                *Resolución 11-97- Dirección General de Tributación Directa – San José, a las ocho horas del doce de agosto de mil novecientos noventa y siente.<br/>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <h5><br/>Transferencia Bancaria<br/>
+                                <br/>
+                                <table WIDTH="60%"  CELLPADDING="20" CELLSPACING="20">
+                                    <tr>
+                                        <td  CELLPADDING="20" CELLSPACING="20" WIDTH="25%" >Banco Nacional</td>
+                                        <td WIDTH="30%">No Cta Ahorros</td>
+                                        <td WIDTH="30%"> No Cta Cliente</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dolares</td>
+                                        <td>200-02-192-002541-4</td>
+                                        <td>15119220020025411</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Colones</td>
+                                        <td>200-01-192-010144-1</td>
+                                        <td>15119220010101447</td>
+                                    </tr>
+                                </table>
+                            </h5>
+                        </div>
+                    </div>
+
+
+            </div>
+        </xpath>
+    </template>
+</data>
+        </openerp>
