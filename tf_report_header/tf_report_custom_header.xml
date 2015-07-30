@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_footer_header" inherit_id="report.external_layout_header">
+
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <t t-set="company" t-value="res_company"/>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 40px;"/>
+                        </div>
+                        <div class="col-xs-9 text-right" style="margin-top:2px;margin-right:1px;font-size: 21px; color:#696969;" t-field="company.rml_header1"/>
+                    </div>
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"></div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span style="font-size: 22px; font-weight: bold;" t-field="company.partner_id.name"/>
+                            <br/>
+                            <span>Cédula Júridica: <span t-field="company.company_registry"/> </span>
+                            <br/>
+                            <span t-field="company.partner_id.street"/>
+                            <br/>
+
+                            <span t-field="company.partner_id.street2"/>
+                            <br/>
+                            <span t-field="company.partner_id.city"/>
+
+                            <span style="margin-left: 25px; " t-field="company.partner_id.state_id"/>
+                            <br/>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>
